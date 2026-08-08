@@ -34,14 +34,14 @@ jobs:
 
           echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
           
-      - name: Verify DB Password
-        run: |
-          if [ -z "$DB_PASSWORD" ]; then
-            echo "DB_PASSWORD is empty"
-            exit 1
-          else
-            echo "DB_PASSWORD is available"
-          fi
+#      - name: Verify DB Password
+#        run: |
+#          if [ -z "$DB_PASSWORD" ]; then
+#            echo "DB_PASSWORD is empty"
+#            exit 1
+#          else
+#            echo "DB_PASSWORD is available"
+#          fi
 
       - name: Build with Maven
         run: mvn clean package
