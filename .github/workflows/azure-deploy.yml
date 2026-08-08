@@ -28,7 +28,7 @@ jobs:
         run: |
           DB_PASSWORD=$(az keyvault secret show \
             --vault-name order-demo-kv-2026 \
-            --name DB_PASSWORD \
+            --name db-password \
             --query value \
             --output tsv)
 
