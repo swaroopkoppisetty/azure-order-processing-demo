@@ -19,10 +19,23 @@ jobs:
           java-version: '21'
           cache: maven
 
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Read DB Password from Key Vault
+        run: |
+          DB_PASSWORD=$(az keyvault secret show \
+            --vault-name order-demo-kv-2026 \
+            --name DB_PASSWORD \
+            --query value \
+            --output tsv)
+
+          echo "DB_PASSWORD=$DB_PASSWORD" >> $GITHUB_ENV
+
       - name: Build with Maven
         run: mvn clean package
-        env:
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
       - name: Upload JAR Artifact
         uses: actions/upload-artifact@v4
