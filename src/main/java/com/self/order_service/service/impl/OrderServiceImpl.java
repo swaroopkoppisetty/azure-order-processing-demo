@@ -7,6 +7,7 @@ import com.self.order_service.entity.Order;
 import com.self.order_service.entity.OrderStatus;
 import com.self.order_service.exception.ResourceNotFoundException;
 import com.self.order_service.repository.OrderRepository;
+import com.self.order_service.service.OrderEventPublisher;
 import com.self.order_service.service.OrderService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderEventPublisher orderEventPublisher;
 
     @Override
     @Transactional
@@ -38,6 +40,13 @@ public class OrderServiceImpl implements OrderService {
                 .build();
 
         Order savedOrder = orderRepository.save(order);
+
+        orderEventPublisher.publishOrderCreated(
+                savedOrder.getId(),
+                savedOrder.getCustomerName(),
+                savedOrder.getProductName(),
+                savedOrder.getAmount().doubleValue()
+        );
 
         return mapToResponse(savedOrder);
     }
